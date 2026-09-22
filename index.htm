@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Ti, Mi Amor</title>
+<style>
+  :root{
+    --glow: #ffe066;
+    --glow-soft: #fff3b0;
+  }
+  *{ box-sizing: border-box; }
+  html, body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    overflow: hidden;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+
+  .scene{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 90% 70% at 50% 55%, rgba(255,224,102,0.18) 0%, rgba(60,55,10,0.35) 40%, #000 78%);
+  }
+
+  /* Estrellas de fondo */
+  .stars{
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 60% 70%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 80% 20%, #fff, transparent),
+      radial-gradient(1px 1px at 30% 80%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 90% 60%, #fff, transparent),
+      radial-gradient(1px 1px at 10% 60%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 50% 10%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 90%, #fff, transparent),
+      radial-gradient(1px 1px at 40% 45%, #fff, transparent),
+      radial-gradient(1px 1px at 85% 40%, #fff, transparent);
+    background-repeat: repeat;
+    background-size: 340px 340px;
+    animation: twinkle 4s infinite alternate;
+    opacity: 0.75;
+  }
+  @keyframes twinkle{
+    from{ opacity: 0.45; }
+    to{ opacity: 1; }
+  }
+
+  /* ---------- Figura central que muta ---------- */
+  .centro{
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+  }
+  .core-glow{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 280px;
+    height: 280px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--glow) 0%, rgba(255,224,102,0.35) 35%, transparent 72%);
+    border-radius: 50%;
+    filter: blur(4px);
+    animation: pulso 3s ease-in-out infinite;
+  }
+  @keyframes pulso{
+    0%, 100%{ transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+    50%{ transform: translate(-50%,-50%) scale(1.18); opacity: 1; }
+  }
+  .anillo{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160px;
+    height: 60px;
+    border: 2px solid rgba(255,224,102,0.5);
+    border-radius: 50%;
+    transform: translate(-50%,-50%) rotate(0deg);
+    animation: girar 6s linear infinite;
+    filter: blur(0.5px);
+  }
+  @keyframes girar{
+    from{ transform: translate(-50%,-50%) rotate(0deg) scaleY(0.4); }
+    to{ transform: translate(-50%,-50%) rotate(360deg) scaleY(0.4); }
+  }
+
+  .forma-central{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4.5rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 30px var(--glow));
+    animation: aparecerForma 12s ease-in-out infinite;
+  }
+  .forma-central.flor{ animation-delay: 0s; }
+  .forma-central.destello{ animation-delay: -4s; }
+  .forma-central.corazon{ animation-delay: -8s; }
+
+  @keyframes aparecerForma{
+    0%{ opacity: 0; transform: translate(-50%,-50%) scale(0.7) rotate(-10deg); }
+    5%{ opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(0deg); }
+    28%{ opacity: 1; transform: translate(-50%,-50%) scale(1.05) rotate(4deg); }
+    33%{ opacity: 0; transform: translate(-50%,-50%) scale(0.8) rotate(10deg); }
+    100%{ opacity: 0; }
+  }
+
+  /* ---------- Ramos con frase ---------- */
+  .ramo{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 4;
+    transform: scale(1);
+    transition: transform 0.4s ease;
+  }
+  .ramo .flores-ramo{
+    font-size: 1.9rem;
+    filter: drop-shadow(0 0 10px rgba(255,224,102,0.75)) hue-rotate(0deg) saturate(1.4);
+    transition: filter 0.4s ease;
+  }
+  .ramo .texto-ramo{
+    color: #ffe9a8;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(255,224,102,0.7);
+    white-space: nowrap;
+    opacity: 0.92;
+    transition: all 0.4s ease;
+  }
+  .ramo.suave{
+    animation: flotarSuave 5s ease-in-out infinite;
+  }
+  @keyframes flotarSuave{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(-8px); }
+  }
+
+  /* Estado activo: al pasar el mouse o tocar */
+  .ramo.activo{
+    transform: scale(1.28);
+    z-index: 6;
+  }
+  .ramo.activo .flores-ramo{
+    filter: drop-shadow(0 0 22px var(--glow)) saturate(1.8) brightness(1.15);
+  }
+  .ramo.activo .texto-ramo{
+    color: #fff6d5;
+    text-shadow: 0 0 18px var(--glow), 0 0 30px var(--glow);
+    opacity: 1;
+  }
+
+  /* Particulas de estallido al interactuar */
+  .particula{
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 20;
+    opacity: 1;
+    will-change: transform, opacity;
+  }
+
+  /* Flores amarillas subiendo de fondo */
+  .flor-flotante{
+    position: absolute;
+    bottom: -60px;
+    opacity: 0;
+    z-index: 1;
+    filter: drop-shadow(0 0 8px rgba(255,224,102,0.7)) saturate(1.3);
+    animation-name: subirFlor;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  @keyframes subirFlor{
+    0%{ transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10%{ opacity: 0.9; }
+    50%{ transform: translateY(-50vh) translateX(20px) rotate(15deg); opacity: 0.9; }
+    90%{ opacity: 0.5; }
+    100%{ transform: translateY(-105vh) translateX(-15px) rotate(-10deg); opacity: 0; }
+  }
+
+  .titulo-amor{
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-shadow: 0 0 20px var(--glow);
+    z-index: 5;
+    text-align: center;
+    animation: latido 2.5s ease-in-out infinite;
+  }
+  @keyframes latido{
+    0%, 100%{ transform: translateX(-50%) scale(1); }
+    50%{ transform: translateX(-50%) scale(1.08); }
+  }
+
+  .pista{
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,233,168,0.6);
+    font-size: 0.8rem;
+    z-index: 5;
+    text-align: center;
+  }
+
+  /* ---------- Carta emergente (estilo pergamino) ---------- */
+  .fondo-carta{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .fondo-carta.visible{
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .carta{
+    position: relative;
+    width: min(88vw, 400px);
+    max-height: 82vh;
+    overflow-y: auto;
+    background:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.25), transparent 60%),
+      linear-gradient(160deg, #f3dfae 0%, #e6c584 45%, #d8b06a 100%);
+    border-radius: 6px;
+    padding: 40px 26px 30px;
+    box-shadow:
+      0 0 0 1px rgba(120,85,30,0.4),
+      0 0 45px rgba(255,224,102,0.4),
+      0 15px 35px rgba(0,0,0,0.5),
+      inset 0 0 40px rgba(120,80,20,0.18);
+    transform: scale(0.85) translateY(20px);
+    transition: transform 0.35s ease;
+    font-family: 'Georgia', 'Segoe UI', serif;
+    text-align: center;
+    clip-path: polygon(
+      0% 2%, 3% 0%, 97% 0%, 100% 3%,
+      100% 97%, 97% 100%, 4% 100%, 0% 98%
+    );
+  }
+  .fondo-carta.visible .carta{
+    transform: scale(1) translateY(0);
+  }
+
+  .sello-cera{
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #b5432b, #7a2416 70%, #5c1a0f 100%);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.5), inset 0 0 6px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #e8c98a;
+    z-index: 2;
+  }
+
+  .carta-titulo{
+    color: #6b4a12;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 14px 0 16px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .carta-mensaje{
+    color: #4a3410;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    margin: 0 4px 22px;
+  }
+
+  .carta-btn{
+    border: none;
+    border-radius: 20px;
+    padding: 8px 22px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(180deg, #8a5a1f, #6b4412);
+    color: #f3dfae;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+    transition: transform 0.15s ease;
+  }
+  .carta-btn:hover{ transform: translateY(-1px); }
+
+  .carta-cerrar-x{
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: #6b4a12;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="scene" id="scene">
+  <div class="stars"></div>
+
+  <div class="titulo-amor">Te amo 💛</div>
+
+  <div class="centro">
+    <div class="core-glow"></div>
+    <div class="anillo"></div>
+    <div class="forma-central flor">🌻</div>
+    <div class="forma-central destello">✨</div>
+    <div class="forma-central corazon">💛</div>
+  </div>
+
+  <!-- Ramos con frase: posiciones fijas y ordenadas alrededor del centro -->
+  <div class="ramo suave" style="top:10%; left:12%;">
+    <div class="flores-ramo">🌻🌻</div>
+    <div class="texto-ramo">Te amo</div>
+  </div>
+  <div class="ramo suave" style="top:12%; left:78%;">
+    <div class="flores-ramo">🌻🌻🌻</div>
+    <div class="texto-ramo">Mi amor</div>
+  </div>
+  <div class="ramo suave" style="top:32%; left:4%;">
+    <div class="flores-ramo">🌻🌻</div>
+    <div class="texto-ramo">Eres mi todo</div>
+  </div>
+  <div class="ramo suave" style="top:30%; left:86%;">
+    <div class="flores-ramo">🌻🌻🌻</div>
+    <div class="texto-ramo">Eres preciosa</div>
+  </div>
+  <div class="ramo suave" style="top:52%; left:6%;">
+    <div class="flores-ramo">🌻🌻</div>
+    <div class="texto-ramo">Te adoro</div>
+  </div>
+  <div class="ramo suave" style="top:52%; left:84%;">
+    <div class="flores-ramo">🌻🌻🌻</div>
+    <div class="texto-ramo">Me encantas</div>
+  </div>
+  <div class="ramo suave" style="top:72%; left:12%;">
+    <div class="flores-ramo">🌻🌻</div>
+    <div class="texto-ramo">Siempre juntos</div>
+  </div>
+  <div class="ramo suave" style="top:72%; left:78%;">
+    <div class="flores-ramo">🌻🌻🌻</div>
+    <div class="texto-ramo">Eres única</div>
+  </div>
+  <div class="ramo suave" style="top:88%; left:32%;">
+    <div class="flores-ramo">🌻🌻</div>
+    <div class="texto-ramo">Contigo siempre</div>
+  </div>
+  <div class="ramo suave" style="top:88%; left:62%;">
+    <div class="flores-ramo">🌻🌻🌻</div>
+    <div class="texto-ramo">Amor de mi vida</div>
+  </div>
+
+  <div class="pista">toca o pasa el mouse sobre una flor 💛</div>
+</div>
+
+<!-- Carta emergente: muestra el mensaje ya escrito para cada frase -->
+<div class="fondo-carta" id="fondoCarta">
+  <div class="carta">
+    <div class="sello-cera">💌</div>
+    <button class="carta-cerrar-x" id="cerrarX">&times;</button>
+    <div class="carta-titulo" id="cartaTitulo">Te amo</div>
+    <div class="carta-mensaje" id="cartaMensaje">Aquí va tu mensaje...</div>
+    <button class="carta-btn" id="cerrarBtn">Cerrar</button>
+  </div>
+</div>
+
+<script>
+  const escena = document.getElementById('scene');
+
+  /* ---- Flores amarillas subiendo de fondo (solo girasoles) ---- */
+  function crearFlorFlotante() {
+    const flor = document.createElement('div');
+    flor.className = 'flor-flotante';
+    flor.textContent = '🌻';
+
+    const left = Math.random() * 100;
+    const duracion = 7 + Math.random() * 6;
+    const retraso = Math.random() * 8;
+    const tamano = 1.2 + Math.random() * 1.4;
+
+    flor.style.left = left + 'vw';
+    flor.style.fontSize = tamano + 'rem';
+    flor.style.animationDuration = duracion + 's';
+    flor.style.animationDelay = retraso + 's';
+
+    escena.appendChild(flor);
+  }
+  for (let i = 0; i < 16; i++) crearFlorFlotante();
+  setInterval(crearFlorFlotante, 1600);
+
+  /* ---- Interaccion: al tocar o acercar el mouse a un texto ---- */
+  const ramos = document.querySelectorAll('.ramo');
+
+  function estallarParticulas(el) {
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const simbolos = ['🌟','🌻','💛','✨'];
+
+    for (let i = 0; i < 8; i++) {
+      const p = document.createElement('div');
+      p.className = 'particula';
+      p.textContent = simbolos[Math.floor(Math.random() * simbolos.length)];
+      p.style.left = cx + 'px';
+      p.style.top = cy + 'px';
+      document.body.appendChild(p);
+
+      const angulo = (Math.PI * 2 * i) / 8 + Math.random() * 0.5;
+      const distancia = 40 + Math.random() * 40;
+      const dx = Math.cos(angulo) * distancia;
+      const dy = Math.sin(angulo) * distancia;
+
+      p.animate([
+        { transform: 'translate(0,0) scale(0.6)', opacity: 1 },
+        { transform: `translate(${dx}px, ${dy}px) scale(1.1)`, opacity: 0 }
+      ], {
+        duration: 700 + Math.random() * 300,
+        easing: 'ease-out'
+      }).onfinish = () => p.remove();
+    }
+  }
+
+  /* ---- Carta emergente por cada frase ---- */
+  /* AQUI escribes/editas los mensajes de cada frase. La clave debe ser
+     EXACTAMENTE igual al texto que aparece bajo cada ramo. */
+  const mensajes = {
+    "Te amo": "Desde que llegaste a mi vida, todo se siente más bonito, más especial y lleno de luz. Contigo descubrí una felicidad que no sabía que me hacía falta. Gracias por existir, por hacerme sonreír y por llenar mis días de amor. Te amo con todo mi corazón, hoy, mañana y siempre. ❤️.",
+    "Mi amor": "Eres mi lugar seguro, mi persona favorita y una de las bendiciones más bonitas que la vida me pudo regalar. En ti encuentro paz, amor y esa sensación de estar exactamente donde quiero estar. Gracias por ser tú y por hacer mi mundo mucho más bonito. Te amo más de lo que las palabras pueden explicar. ❤️.",
+    "Eres mi todo": "No hay nada en este mundo que compare con lo que siento por ti. Eres mi todo.",
+    "Eres preciosa": "Cada detalle tuyo, por pequeño que sea, logra enamorarme un poquito más cada día. Tu forma de ser, tu sonrisa, tus palabras y hasta esas pequeñas cosas que quizá tú no notas, hacen que me enamore de ti una y otra vez. ❤️.",
+    "Te adoro": "Te adoro más de lo que cualquier palabra podría explicar. Lo que siento por ti es tan grande y tan bonito que a veces siento que no existen palabras suficientes para describirlo. Solo sé que cada día te quiero un poquito más y que tenerte en mi vida es uno de mis regalos favoritos. ❤️.",
+    "Me encantas": "Me encanta tu forma de ser, tu risa, tu manera de hacerme sentir y cada momento que comparto contigo. Amo esas pequeñas cosas que te hacen ser tú, porque sin darme cuenta, cada una de ellas hace que me enamore un poquito más de ti. ❤️.",
+    "Siempre juntos": " Pase lo que pase, quiero seguir caminando a tu lado, compartiendo contigo cada alegría, cada desafío y cada momento que la vida nos regale. No importa lo que venga, mientras pueda tener tu mano junto a la mía, siempre voy a elegir estar contigo. ❤️.",
+    "Eres única": "No existe nadie como tú, y creo que eso es precisamente lo que más amo de ti. Tu forma de ser, tu manera de querer y cada pequeño detalle que te hace único/a son razones por las que mi corazón te elige una y otra vez. ❤️.",
+    "Contigo siempre": "Contigo quiero vivir cada etapa de mi vida. Quiero compartir mis sueños, celebrar mis alegrías, abrazarte en mis logros y tomar tu mano en los momentos difíciles. Quiero crecer contigo, descubrir el mundo a tu lado, llenar nuestra historia de recuerdos y seguir eligiéndote cada día. Porque si la vida me da la oportunidad de vivirlo todo contigo, no necesito nada más. Te quiero hoy, mañana y en cada capítulo que nos quede por escribir. ❤️",
+    "Amor de mi vida": "Eres el amor de mi vida, hoy, mañana y siempre. ❤️ No importa cuánto pase el tiempo, mi corazón siempre va a encontrarte y elegirte. Quiero seguir amándote, cuidándote y compartiendo mi vida contigo, porque no imagino un futuro en el que no estés a mi lado. Eres, y siempre serás, una de las partes más bonitas de mi vida."
+  };
+
+  const fondoCarta = document.getElementById('fondoCarta');
+  const cartaTitulo = document.getElementById('cartaTitulo');
+  const cartaMensaje = document.getElementById('cartaMensaje');
+  const cerrarBtn = document.getElementById('cerrarBtn');
+  const cerrarX = document.getElementById('cerrarX');
+
+  function abrirCarta(ramo) {
+    const texto = ramo.querySelector('.texto-ramo').textContent.trim();
+    cartaTitulo.textContent = texto;
+    cartaMensaje.textContent = mensajes[texto] || "💛";
+    fondoCarta.classList.add('visible');
+  }
+
+  function cerrarCarta() {
+    fondoCarta.classList.remove('visible');
+  }
+
+  cerrarBtn.addEventListener('click', cerrarCarta);
+  cerrarX.addEventListener('click', cerrarCarta);
+  fondoCarta.addEventListener('click', (e) => {
+    if (e.target === fondoCarta) cerrarCarta();
+  });
+
+  ramos.forEach(ramo => {
+    ramo.addEventListener('mouseenter', () => {
+      ramo.classList.add('activo');
+    });
+    ramo.addEventListener('mouseleave', () => {
+      ramo.classList.remove('activo');
+    });
+    ramo.addEventListener('click', () => {
+      ramo.classList.add('activo');
+      estallarParticulas(ramo);
+      setTimeout(() => ramo.classList.remove('activo'), 900);
+      abrirCarta(ramo);
+    });
+  });
+</script>
+
+</body>
+</html>
