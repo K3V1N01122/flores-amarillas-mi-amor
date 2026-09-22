@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Para Ti, Mi Amor</title>
 <style>
   :root{
     --glow: #ffe066;
     --glow-soft: #fff3b0;
   }
-  *{ box-sizing: border-box; }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body{
     margin:0;
     padding:0;
@@ -57,7 +57,7 @@
   /* ---------- Figura central que muta ---------- */
   .centro{
     position: absolute;
-    top: 48%;
+    top: 46%;
     left: 50%;
     width: 10px;
     height: 10px;
@@ -120,33 +120,23 @@
   }
 
   /* ---------- Ramos con frase ---------- */
+  /* El contenedor externo solo fija la posicion (centrada en el punto). */
   .ramo{
     position: absolute;
+    transform: translateX(-50%);
+    z-index: 4;
+    cursor: pointer;
+  }
+  /* El contenedor interno maneja el flotar suave y el toque/clic. */
+  .ramo-inner{
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    cursor: pointer;
+    gap: 3px;
     user-select: none;
-    z-index: 4;
-    transform: scale(1);
-    transition: transform 0.4s ease;
+    padding: 6px;
   }
-  .ramo .flores-ramo{
-    font-size: 1.9rem;
-    filter: drop-shadow(0 0 10px rgba(255,224,102,0.75)) hue-rotate(0deg) saturate(1.4);
-    transition: filter 0.4s ease;
-  }
-  .ramo .texto-ramo{
-    color: #ffe9a8;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-shadow: 0 0 10px rgba(255,224,102,0.7);
-    white-space: nowrap;
-    opacity: 0.92;
-    transition: all 0.4s ease;
-  }
-  .ramo.suave{
+  .ramo-inner.suave{
     animation: flotarSuave 5s ease-in-out infinite;
   }
   @keyframes flotarSuave{
@@ -154,16 +144,33 @@
     50%{ transform: translateY(-8px); }
   }
 
-  /* Estado activo: al pasar el mouse o tocar */
-  .ramo.activo{
-    transform: scale(1.28);
-    z-index: 6;
+  .ramo .flores-ramo{
+    font-size: 1.9rem;
+    filter: drop-shadow(0 0 10px rgba(255,224,102,0.75)) saturate(1.4);
+    transition: filter 0.3s ease, font-size 0.3s ease;
+    line-height: 1;
   }
+  .ramo .texto-ramo{
+    color: #ffe9a8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(255,224,102,0.7);
+    text-align: center;
+    max-width: 110px;
+    line-height: 1.15;
+    opacity: 0.92;
+    transition: all 0.3s ease;
+  }
+
+  /* Estado activo: al pasar el mouse o tocar (sin usar transform, para no
+     chocar con la animacion de flotar) */
   .ramo.activo .flores-ramo{
+    font-size: 2.3rem;
     filter: drop-shadow(0 0 22px var(--glow)) saturate(1.8) brightness(1.15);
   }
   .ramo.activo .texto-ramo{
     color: #fff6d5;
+    font-size: 0.95rem;
     text-shadow: 0 0 18px var(--glow), 0 0 30px var(--glow);
     opacity: 1;
   }
@@ -201,7 +208,7 @@
 
   .titulo-amor{
     position: absolute;
-    top: 6%;
+    top: 5%;
     left: 50%;
     transform: translateX(-50%);
     color: #fff;
@@ -219,13 +226,14 @@
 
   .pista{
     position: absolute;
-    bottom: 3%;
+    bottom: 2.5%;
     left: 50%;
     transform: translateX(-50%);
     color: rgba(255,233,168,0.6);
     font-size: 0.8rem;
     z-index: 5;
     text-align: center;
+    white-space: nowrap;
   }
 
   /* ---------- Carta emergente (estilo pergamino) ---------- */
@@ -241,6 +249,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.35s ease;
+    padding: 20px;
   }
   .fondo-carta.visible{
     opacity: 1;
@@ -256,7 +265,7 @@
       radial-gradient(ellipse at top left, rgba(255,255,255,0.25), transparent 60%),
       linear-gradient(160deg, #f3dfae 0%, #e6c584 45%, #d8b06a 100%);
     border-radius: 6px;
-    padding: 40px 26px 30px;
+    padding: 40px 22px 26px;
     box-shadow:
       0 0 0 1px rgba(120,85,30,0.4),
       0 0 45px rgba(255,224,102,0.4),
@@ -266,10 +275,6 @@
     transition: transform 0.35s ease;
     font-family: 'Georgia', 'Segoe UI', serif;
     text-align: center;
-    clip-path: polygon(
-      0% 2%, 3% 0%, 97% 0%, 100% 3%,
-      100% 97%, 97% 100%, 4% 100%, 0% 98%
-    );
   }
   .fondo-carta.visible .carta{
     transform: scale(1) translateY(0);
@@ -295,19 +300,20 @@
 
   .carta-titulo{
     color: #6b4a12;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    margin: 14px 0 16px;
+    margin: 10px 0 14px;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 0 rgba(255,255,255,0.3);
   }
 
   .carta-mensaje{
     color: #4a3410;
-    font-size: 1.05rem;
-    line-height: 1.65;
+    font-size: 1rem;
+    line-height: 1.6;
     white-space: pre-wrap;
-    margin: 0 4px 22px;
+    margin: 0 2px 20px;
+    text-align: left;
   }
 
   .carta-btn{
@@ -336,6 +342,27 @@
     line-height: 1;
     opacity: 0.7;
   }
+
+  /* ---------- Ajustes para pantallas pequenas (celular) ---------- */
+  @media (max-width: 600px){
+    .titulo-amor{ font-size: 1.2rem; top: 3%; }
+    .forma-central{ font-size: 3rem; }
+    .core-glow{ width: 170px; height: 170px; }
+    .anillo{ width: 110px; height: 40px; }
+    .ramo .flores-ramo{ font-size: 1.3rem; }
+    .ramo .texto-ramo{ font-size: 0.68rem; max-width: 78px; line-height: 1.1; }
+    .ramo.activo .flores-ramo{ font-size: 1.6rem; }
+    .ramo.activo .texto-ramo{ font-size: 0.76rem; }
+    .pista{ font-size: 0.68rem; }
+    .carta{ padding: 34px 16px 20px; }
+    .carta-titulo{ font-size: 1.15rem; }
+    .carta-mensaje{ font-size: 0.92rem; line-height: 1.5; }
+  }
+
+  @media (max-width: 380px){
+    .ramo .texto-ramo{ font-size: 0.6rem; max-width: 66px; }
+    .ramo .flores-ramo{ font-size: 1.1rem; }
+  }
 </style>
 </head>
 <body>
@@ -353,46 +380,66 @@
     <div class="forma-central corazon">💛</div>
   </div>
 
-  <!-- Ramos con frase: posiciones fijas y ordenadas alrededor del centro -->
-  <div class="ramo suave" style="top:10%; left:12%;">
-    <div class="flores-ramo">🌻🌻</div>
-    <div class="texto-ramo">Te amo</div>
+  <!-- Ramos con frase: posiciones fijas, centradas en su punto (top/left) -->
+  <div class="ramo" style="top:9%; left:16%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻</div>
+      <div class="texto-ramo">Te amo</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:12%; left:78%;">
-    <div class="flores-ramo">🌻🌻🌻</div>
-    <div class="texto-ramo">Mi amor</div>
+  <div class="ramo" style="top:11%; left:82%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻🌻</div>
+      <div class="texto-ramo">Mi amor</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:32%; left:4%;">
-    <div class="flores-ramo">🌻🌻</div>
-    <div class="texto-ramo">Eres mi todo</div>
+  <div class="ramo" style="top:33%; left:10%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻</div>
+      <div class="texto-ramo">Eres mi todo</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:30%; left:86%;">
-    <div class="flores-ramo">🌻🌻🌻</div>
-    <div class="texto-ramo">Eres preciosa</div>
+  <div class="ramo" style="top:31%; left:88%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻🌻</div>
+      <div class="texto-ramo">Eres preciosa</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:52%; left:6%;">
-    <div class="flores-ramo">🌻🌻</div>
-    <div class="texto-ramo">Te adoro</div>
+  <div class="ramo" style="top:52%; left:9%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻</div>
+      <div class="texto-ramo">Te adoro</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:52%; left:84%;">
-    <div class="flores-ramo">🌻🌻🌻</div>
-    <div class="texto-ramo">Me encantas</div>
+  <div class="ramo" style="top:52%; left:89%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻🌻</div>
+      <div class="texto-ramo">Me encantas</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:72%; left:12%;">
-    <div class="flores-ramo">🌻🌻</div>
-    <div class="texto-ramo">Siempre juntos</div>
+  <div class="ramo" style="top:71%; left:15%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻</div>
+      <div class="texto-ramo">Siempre juntos</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:72%; left:78%;">
-    <div class="flores-ramo">🌻🌻🌻</div>
-    <div class="texto-ramo">Eres única</div>
+  <div class="ramo" style="top:71%; left:83%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻🌻</div>
+      <div class="texto-ramo">Eres única</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:88%; left:32%;">
-    <div class="flores-ramo">🌻🌻</div>
-    <div class="texto-ramo">Contigo siempre</div>
+  <div class="ramo" style="top:88%; left:30%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻</div>
+      <div class="texto-ramo">Contigo siempre</div>
+    </div>
   </div>
-  <div class="ramo suave" style="top:88%; left:62%;">
-    <div class="flores-ramo">🌻🌻🌻</div>
-    <div class="texto-ramo">Amor de mi vida</div>
+  <div class="ramo" style="top:88%; left:70%;">
+    <div class="ramo-inner suave">
+      <div class="flores-ramo">🌻🌻🌻</div>
+      <div class="texto-ramo">Amor de mi vida</div>
+    </div>
   </div>
 
   <div class="pista">toca o pasa el mouse sobre una flor 💛</div>
@@ -421,7 +468,7 @@
     const left = Math.random() * 100;
     const duracion = 7 + Math.random() * 6;
     const retraso = Math.random() * 8;
-    const tamano = 1.2 + Math.random() * 1.4;
+    const tamano = 1.1 + Math.random() * 1.2;
 
     flor.style.left = left + 'vw';
     flor.style.fontSize = tamano + 'rem';
@@ -475,7 +522,7 @@
     "Eres preciosa": "Cada detalle tuyo, por pequeño que sea, logra enamorarme un poquito más cada día. Tu forma de ser, tu sonrisa, tus palabras y hasta esas pequeñas cosas que quizá tú no notas, hacen que me enamore de ti una y otra vez. ❤️.",
     "Te adoro": "Te adoro más de lo que cualquier palabra podría explicar. Lo que siento por ti es tan grande y tan bonito que a veces siento que no existen palabras suficientes para describirlo. Solo sé que cada día te quiero un poquito más y que tenerte en mi vida es uno de mis regalos favoritos. ❤️.",
     "Me encantas": "Me encanta tu forma de ser, tu risa, tu manera de hacerme sentir y cada momento que comparto contigo. Amo esas pequeñas cosas que te hacen ser tú, porque sin darme cuenta, cada una de ellas hace que me enamore un poquito más de ti. ❤️.",
-    "Siempre juntos": " Pase lo que pase, quiero seguir caminando a tu lado, compartiendo contigo cada alegría, cada desafío y cada momento que la vida nos regale. No importa lo que venga, mientras pueda tener tu mano junto a la mía, siempre voy a elegir estar contigo. ❤️.",
+    "Siempre juntos": "Pase lo que pase, quiero seguir caminando a tu lado, compartiendo contigo cada alegría, cada desafío y cada momento que la vida nos regale. No importa lo que venga, mientras pueda tener tu mano junto a la mía, siempre voy a elegir estar contigo. ❤️.",
     "Eres única": "No existe nadie como tú, y creo que eso es precisamente lo que más amo de ti. Tu forma de ser, tu manera de querer y cada pequeño detalle que te hace único/a son razones por las que mi corazón te elige una y otra vez. ❤️.",
     "Contigo siempre": "Contigo quiero vivir cada etapa de mi vida. Quiero compartir mis sueños, celebrar mis alegrías, abrazarte en mis logros y tomar tu mano en los momentos difíciles. Quiero crecer contigo, descubrir el mundo a tu lado, llenar nuestra historia de recuerdos y seguir eligiéndote cada día. Porque si la vida me da la oportunidad de vivirlo todo contigo, no necesito nada más. Te quiero hoy, mañana y en cada capítulo que nos quede por escribir. ❤️",
     "Amor de mi vida": "Eres el amor de mi vida, hoy, mañana y siempre. ❤️ No importa cuánto pase el tiempo, mi corazón siempre va a encontrarte y elegirte. Quiero seguir amándote, cuidándote y compartiendo mi vida contigo, porque no imagino un futuro en el que no estés a mi lado. Eres, y siempre serás, una de las partes más bonitas de mi vida."
